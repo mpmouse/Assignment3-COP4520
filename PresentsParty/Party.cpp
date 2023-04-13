@@ -22,6 +22,8 @@ Party::Party(int presents) :
 	mRandomizer.seed(seeder());
 	mPresentCount = presents;
 	srand(time(NULL));
+	gatherPresents();
+
 }
 
 Party::~Party() = default;
@@ -37,7 +39,19 @@ void Party::work()
 		 */
 	}
 
-	//endParty();
+	endParty();
+}
+
+void Party::gatherPresents()
+{
+	std::vector<Present> presents(mPresentCount);
+	
+	for (int i = 0; i < presents.size(); i++)
+	{
+		presents[i].setId(i);
+	}
+
+	std::random_shuffle(presents.begin(), presents.end(), mRandomizer);
 }
 
 void Party::printStatistics()

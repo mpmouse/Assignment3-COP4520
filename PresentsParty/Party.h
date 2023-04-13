@@ -22,6 +22,8 @@ public:
 
 	~Party();	
 
+	void gatherPresents();
+
 	void work();
 
 	void printStatistics();
@@ -30,7 +32,8 @@ private:
 	int mPresentCount;
 	int mServents;
 	int mCardCount;
-	std::vector<Present> mPresentList;
+	std::vector<Present> mSortedPresents;
+	std::vector<Present> mUnsortedPresents;
 	std::atomic<bool> mAnnouncment;
 	std::mt19937 mRandomizer;
 	std::uniform_int_distribution<int> mRandomDistribution;

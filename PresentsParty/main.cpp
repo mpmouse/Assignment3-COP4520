@@ -14,17 +14,16 @@
 
 int main(int argc, char **argv, char **env) {
 
-	int mPresents = 500000;
+	int presents = 50;
 
-	int mServents = 4;
+	int servents = 4;
 
 	Timer mTimer;
 
 	mTimer.startTimer();
 
-	Party presentsParty(mPresents, mServents);
-	labrinthParty.work();
-	labrinthParty.printStatistics();
+	Party presentsParty(presents);
+	presentsParty.printStatistics();
 
 	mTimer.stopTimer();
 

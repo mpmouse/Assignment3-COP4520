@@ -13,6 +13,8 @@
 #include <random>
 
 class Guest;
+class Present;
+class Card;
 
 class Party {
 
@@ -28,11 +30,19 @@ public:
 
 	void printStatistics();
 
+	bool checkForPresent(int presentId);
+
+	void writeCard();
+
+	void sortPresent();
+
 private:
 	int mPresentCount;
 	int mServents;
 	int mCardCount;
-	std::vector<Present> mSortedPresents;
+	std::atomic<int> mTicket;
+	Present *mHead;
+	Card *mCardList;
 	std::vector<Present> mUnsortedPresents;
 	std::atomic<bool> mAnnouncment;
 	std::mt19937 mRandomizer;

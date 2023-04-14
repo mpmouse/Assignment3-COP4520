@@ -8,7 +8,7 @@
 #ifndef PRESENT_H
 #define PRESENT_H
 
-#include "Card.h"
+//#include "Card.h"
 #include "Party.h"
 
 #include <thread>
@@ -24,9 +24,13 @@ public:
 
 	~Present();
 
-	bool raiseFlag();
+	Present(const Present &present);
 
-	bool lowerFlag();
+	Present& operator= (const Present &other);
+
+	void raiseFlag();
+
+	void lowerFlag();
 
 	bool checkFlag();
 
@@ -34,19 +38,24 @@ public:
 
 	void setId(int id);
 
-	std::shared_ptr<Present> getPrev();
+	Present getPrev();
 
-	void setPrev(std::shared_ptr<Present> prev);
+	void setPrev(Present *prev);
 
-	std::shared_ptr<Present> getNext();
+	Present getNext();
 
-	void setNext(std::shared_ptr<Present> next);
+	void setNext(Present *next);
+
+	int remove();
+
+	void link(Present *prev, Present *next);
 	
 private:
 	int mId;
 	std::atomic<bool> mFlag;
-	std::shared_ptr<Present> mPrev;
-	std::shared_ptr<Present> mNext;
+	Present *mPrev;
+	Present *mNext;
+	bool mHead;
 };
 
 #endif // !PRESENT_H

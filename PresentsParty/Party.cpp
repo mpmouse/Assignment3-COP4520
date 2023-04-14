@@ -15,7 +15,8 @@ Party::Party(int presents) :
 	mRandomDistribution(0, presents),
 	mPresentCount(presents),
 	mServents(4),
-	mCardCount(0)
+	mCardCount(0),
+	mTicket(0)
 {
 	std::atomic<bool> mAnnouncment;
 	std::random_device seeder;
@@ -23,7 +24,9 @@ Party::Party(int presents) :
 	mPresentCount = presents;
 	srand(time(NULL));
 	gatherPresents();
-
+	mHead = NULL;
+	mCardList = NULL;
+	gatherPresents();
 }
 
 Party::~Party() = default;
@@ -39,7 +42,7 @@ void Party::work()
 		 */
 	}
 
-	endParty();
+	//endParty();
 }
 
 void Party::gatherPresents()
@@ -51,7 +54,9 @@ void Party::gatherPresents()
 		presents[i].setId(i);
 	}
 
-	std::random_shuffle(presents.begin(), presents.end(), mRandomizer);
+	std::shuffle(presents.begin(), presents.end(), mRandomizer);
+
+	mUnsortedPresents = presents;
 }
 
 void Party::printStatistics()
@@ -59,6 +64,12 @@ void Party::printStatistics()
 	std::cout << "Guest Count: " << mPresentCount << std::endl;
 	std::cout << "Thank you cards written: " << mCardCount << std::endl;
 
+	for (Present present : mUnsortedPresents)
+	{
+		std::cout << present.getId() << std::endl;
+	}
+
+	/*
 	if (allNotesWritten())
 	{
 		std::cout << "All Thank You cards have been written." << std::endl;
@@ -68,8 +79,11 @@ void Party::printStatistics()
 	{
 		std::cout << "Not all Thank You notes have been written." << std::endl;
 	}
+	*/
+
 }
 
+/*
 bool Party::checkForAnnouncment()
 {
 	return mAnnouncment;
@@ -78,4 +92,32 @@ bool Party::checkForAnnouncment()
 void Party::makeAnnouncment()
 {
 	mAnnouncment.store(true);
+}
+*/
+
+bool Party::checkForPresent(int presentId)
+{
+
+}
+
+void Party::writeCard()
+{
+	if (this->mHead != NULL)
+	{
+		//take gift from next
+
+	}
+	else if (this->mUnsortedPresents.empty())
+	{
+		// All presents have been processed
+	}
+	else
+	{
+		// More presents need to be sorted first
+	}
+}
+
+void Party::sortPresent()
+{
+
 }

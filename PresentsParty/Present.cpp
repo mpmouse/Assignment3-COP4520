@@ -9,26 +9,61 @@
 #include "Present.h"
 #include "Party.h"
 
+
+
 Present::Present()
 {
 	mFlag = false;
 	mPrev = NULL;
 	mNext = NULL;
 	mId = NAN;
+	mHead = false;
 }
 
 Present::~Present() = default;
 
-bool Present::raiseFlag()
+Present::Present(const Present &present)
 {
-	mFlag = true;
-	this->getPrev()->raiseFlag();
+	mFlag.store(present.mFlag);
+	mPrev = NULL;
+	mNext = NULL;
+	mId = present.mId;
+	mHead = present.mHead;
 }
 
-bool Present::lowerFlag()
+Present& Present::operator =(const Present &other)
+{
+	mFlag.store(other.mFlag);
+	mPrev = other.mPrev;
+	mNext = other.mNext;
+	mId = other.mId;
+
+	return *this;
+}
+
+void Present::raiseFlag()
+{	
+	bool expected = false;
+	
+	while (!mFlag.compare_exchange_strong(expected, true))
+	{
+
+	}
+
+	while (!this->mNext->mFlag.compare_exchange_strong(expected, true))
+	{
+
+	}
+}
+
+void Present::lowerFlag()
 {
 	mFlag = false;
-	this->getPrev()->lowerFlag();
+
+	if (this->mNext != NULL)
+	{
+		this->mNext->lowerFlag();
+	}	
 }
 
 bool Present::checkFlag()
@@ -46,22 +81,41 @@ void Present::setId(int id)
 	mId = id;
 }
 
-std::shared_ptr<Present> Present::getPrev()
+Present Present::getPrev()
 {
-	return mPrev;
+	return *mPrev;
 }
 
-void Present::setPrev(std::shared_ptr<Present> prev)
+void Present::setPrev(Present *prev)
 {
 	mPrev = prev;
 }
 
-std::shared_ptr<Present> Present::getNext()
+Present Present::getNext()
 {
-	return mNext;
+	return *mNext;
 }
 
-void Present::setNext(std::shared_ptr<Present> next)
+void Present::setNext(Present *next)
 {
 	mNext = next;
+}
+
+int Present::remove()
+{
+	this->mPrev->setNext(this->mNext);
+	this->mNext->setPrev(this->mPrev);
+
+	if (this->mPrev == NULL)
+	{
+		this->mHead = true;
+	}
+
+	return this->mId;
+}
+
+void Present::link(Present *prev, Present *next)
+{
+	this->mPrev = prev;
+	this->mNext = next;
 }

@@ -34,15 +34,17 @@ public:
 
 	bool checkFlag();
 
+	void setFlag(bool status);
+
 	int getId();
 
 	void setId(int id);
 
-	Present getPrev();
+	Present* getPrev();
 
 	void setPrev(Present *prev);
 
-	Present getNext();
+	Present* getNext();
 
 	void setNext(Present *next);
 

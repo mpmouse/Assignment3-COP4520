@@ -38,9 +38,11 @@ public:
 
 	void sortPresent();
 
+	void endParty();
+
 private:
 	int mPresentCount;
-	int mServents;
+	int mServants;
 	int mCardCount;
 	std::atomic<int> mTicket;
 	Present *mHead;

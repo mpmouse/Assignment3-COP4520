@@ -14,7 +14,7 @@
 
 int main(int argc, char **argv, char **env) {
 
-	int presents = 50;
+	int presents = 1000;
 
 	int servents = 4;
 
@@ -23,6 +23,7 @@ int main(int argc, char **argv, char **env) {
 	mTimer.startTimer();
 
 	Party presentsParty(presents);
+	presentsParty.work();
 	presentsParty.printStatistics();
 
 	mTimer.stopTimer();

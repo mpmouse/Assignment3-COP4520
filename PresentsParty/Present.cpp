@@ -16,7 +16,7 @@ Present::Present()
 	mFlag = false;
 	mPrev = NULL;
 	mNext = NULL;
-	mId = NAN;
+	mId = 0;
 	mHead = false;
 }
 
@@ -66,13 +66,18 @@ void Present::lowerFlag()
 
 	if (this->mNext != NULL)
 	{
-		this->mNext->lowerFlag();
+		this->mNext->mFlag = false;
 	}	
 }
 
 bool Present::checkFlag()
 {
 	return mFlag;
+}
+
+void Present::setFlag(bool status)
+{
+	this->mFlag = status;
 }
 
 int Present::getId()
@@ -85,9 +90,9 @@ void Present::setId(int id)
 	mId = id;
 }
 
-Present Present::getPrev()
+Present* Present::getPrev()
 {
-	return *mPrev;
+	return mPrev;
 }
 
 void Present::setPrev(Present *prev)
@@ -95,9 +100,9 @@ void Present::setPrev(Present *prev)
 	mPrev = prev;
 }
 
-Present Present::getNext()
+Present* Present::getNext()
 {
-	return *mNext;
+	return mNext;
 }
 
 void Present::setNext(Present *next)
@@ -109,13 +114,14 @@ int Present::remove()
 {
 	this->mPrev->setNext(this->mNext);
 	this->mNext->setPrev(this->mPrev);
+	int id = this->mId;
 
 	if (this->mPrev == NULL)
 	{
 		this->mHead = true;
 	}
 
-	return this->mId;
+	return id;
 }
 
 void Present::link(Present *prev, Present *next)

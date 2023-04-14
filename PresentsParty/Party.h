@@ -38,8 +38,6 @@ public:
 
 	void sortPresent();
 
-	void endParty();
-
 private:
 	int mPresentCount;
 	int mServants;

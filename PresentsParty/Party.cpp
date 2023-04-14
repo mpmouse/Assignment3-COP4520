@@ -11,6 +11,8 @@
 #include "Present.h"
 #include "Card.h"
 
+#include <thread>
+
 
 Party::Party(int presents) :
 	mRandomDistribution(0, presents),
@@ -42,19 +44,23 @@ void Party::work()
 		 * The things that happen TODO
 		 */
 
-		getTask();
-	}
+		std::vector<std::thread> servants(4);
 
-	//endParty();
+		for (std::thread &t : servants)
+		{
+			t = std::thread(&Party::getTask, this);
+		}
+
+		for (std::thread &t : servants)
+		{
+			if (t.joinable())
+			{
+				t.join();
+			}
+		}
+	}
 }
 
-void Party::endParty()
-{
-	for (int i = 0; i < this->mServants; i++)
-	{
-		//mGuestList[i].goHome();
-	}
-}
 
 void Party::getTask()
 {

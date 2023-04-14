@@ -24,6 +24,8 @@ public:
 
 	~Party();	
 
+	void getTask();
+
 	void gatherPresents();
 
 	void work();
@@ -42,7 +44,7 @@ private:
 	int mCardCount;
 	std::atomic<int> mTicket;
 	Present *mHead;
-	Card *mCardList;
+	Card *mCardHead;
 	std::vector<Present> mUnsortedPresents;
 	std::atomic<bool> mAnnouncment;
 	std::mt19937 mRandomizer;

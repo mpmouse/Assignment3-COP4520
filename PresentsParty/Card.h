@@ -17,17 +17,19 @@ class Card
 
 public:
 
-	Card(int id);
+	Card();
 
 	~Card();
 
 	void insert(Card *prev);
 
+	void setId(int id);
+
 	void makeHead();
 
 private:
 	int mId;
-	Card *mPrev;
+	Card *mNext;
 	bool mHead;
 	const char *message = "Thank you!";
 };

@@ -8,20 +8,26 @@
 
 #include "Card.h"
 
-Card::Card(int id) : mId(id)
+Card::Card()
 {
-	mPrev = NULL;
+	mNext = NULL;
 	mHead = false;
+	mId = NAN;
 }
 
 Card::~Card() = default;
 
-void Card::insert(Card *prev)
+void Card::insert(Card *head)
 {
-	this->mPrev = prev;
+	this->mNext = head;
 }
 
 void Card::makeHead()
 {
 	this->mHead = true;
+}
+
+void Card::setId(int id)
+{
+	this->mId = id;
 }

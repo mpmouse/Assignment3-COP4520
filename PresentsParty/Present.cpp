@@ -47,12 +47,16 @@ void Present::raiseFlag()
 	
 	while (!mFlag.compare_exchange_strong(expected, true))
 	{
-
+		// Wait on flag/lock
 	}
 
-	while (!this->mNext->mFlag.compare_exchange_strong(expected, true))
+	// If next is null, do not wait on a lock for a non-existant present
+	if (this->mNext != NULL)
 	{
-
+		while (!this->mNext->mFlag.compare_exchange_strong(expected, true))
+		{
+			// Wait on flag/lock
+		}
 	}
 }
 

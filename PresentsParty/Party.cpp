@@ -28,8 +28,8 @@ Party::Party(int presents) :
 	mRandomizer.seed(seeder());
 	mPresentCount = presents;
 	gatherPresents();
-	mHead = NULL;
-	mCardHead = NULL;
+	mHead = nullptr;
+	mCardHead = nullptr;
 	gatherPresents();
 }
 
@@ -106,17 +106,18 @@ void Party::printStatistics()
 	std::cout << "Total presents: " << mPresentCount << std::endl;
 	std::cout << "Sorted presents: " << mSortedCount << std::endl;
 	std::cout << "Thank you cards written: " << mCardCount << std::endl;
+	std::cout << "Unsorted presents: " << mUnsortedPresents.size() << std::endl;
 
 	Card *temp = mCardHead;
 	
 	/*
-	if (temp != NULL)
+	if (temp != nullptr)
 	{
 		int id = temp->getId();
 		
 		std::cout << "Thank you card for present "<< id << std::endl;
 
-		while (temp->getNext() != NULL)
+		while (temp->getNext() != nullptr)
 		{
 			temp = temp->getNext();
 			id = temp->getId();
@@ -132,7 +133,7 @@ bool Party::checkForPresent(Present *peek, int presentId)
 	
 	//Present *peek = this->mHead;
 
-	while (peek != NULL && peek->checkFlag() == true)
+	while (peek != nullptr && peek->checkFlag() == true)
 	{
 		// wait for present to be available
 	}
@@ -160,11 +161,11 @@ bool Party::checkForPresent(Present *peek, int presentId)
 
 void Party::writeCard()
 {
-	if (this->mHead != NULL)
+	if (this->mHead != nullptr)
 	{
 		Present *temp = this->mHead;
 
-		while (temp->checkFlag() == true && temp->getNext() != NULL)
+		while (temp->checkFlag() == true && temp->getNext() != nullptr)
 		{
 			temp = temp->getNext();
 		}
@@ -174,12 +175,12 @@ void Party::writeCard()
 		Present *curr = temp->getNext();
 		Card tyCard;
 		
-		if (mCardHead == NULL)
+		if (mCardHead == nullptr)
 		{
 			tyCard.makeHead();
 		}
 
-		if (curr != NULL)
+		if (curr != nullptr)
 		{
 			tyCard.setId(curr->remove(temp));
 			delete curr;
@@ -188,7 +189,7 @@ void Party::writeCard()
 		{
 			tyCard.setId(this->mHead->getId());
 			delete this->mHead;
-			this->mHead = NULL;
+			this->mHead = nullptr;
 		}
 
 		tyCard.insert(mCardHead);
@@ -215,21 +216,32 @@ void Party::writeCard()
 
 void Party::sortPresent()
 {
+	Present *present = nullptr;
+	
+	mDoor.lock();
+
 	if (!mUnsortedPresents.empty())
 	{
-		Present *present = new Present(mUnsortedPresents.back());
+		present = new Present(mUnsortedPresents.back());
 		this->mUnsortedPresents.pop_back();
+	}
 
-		if (this->mHead == NULL)
+	mDoor.unlock();
+	
+
+	if(present != nullptr)
+	{
+
+		if (this->mHead == nullptr)
 		{
 			this->mHead = present;
 		}
 		else
 		{
 			Present *temp = this->mHead;
-			Present *prev = NULL;
+			Present *prev = nullptr;
 
-			while (temp->getId() <= present->getId() && temp->getNext() != NULL)
+			while (temp->getId() <= present->getId() && temp->getNext() != nullptr)
 			{
 				prev = temp;
 				temp = temp->getNext();
@@ -242,9 +254,9 @@ void Party::sortPresent()
 				// Oops, this gift has already been sorted
 				// Do nothing
 			}
-			else if (temp->getNext() == NULL)
+			else if (temp->getNext() == nullptr)
 			{
-				present->link(temp, NULL);
+				present->link(temp, nullptr);
 			}
 			else
 			{

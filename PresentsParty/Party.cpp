@@ -160,7 +160,7 @@ bool Party::checkForPresent(Present *peek, int presentId)
 }
 
 void Party::writeCard()
-{
+{	
 	if (this->mHead != nullptr)
 	{
 		Present *temp = this->mHead;
@@ -218,7 +218,7 @@ void Party::sortPresent()
 {
 	Present *present = nullptr;
 	
-	mDoor.lock();
+	mSortDoor.lock();
 
 	if (!mUnsortedPresents.empty())
 	{
@@ -226,7 +226,7 @@ void Party::sortPresent()
 		this->mUnsortedPresents.pop_back();
 	}
 
-	mDoor.unlock();
+	mSortDoor.unlock();
 	
 
 	if(present != nullptr)
@@ -270,7 +270,7 @@ void Party::sortPresent()
 	}
 	else
 	{
-		std::cout << "No more presents need to be sorted." << std::endl;
+		// No more presents to be sorted
 	}
 
 }

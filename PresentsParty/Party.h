@@ -51,7 +51,8 @@ private:
 	std::mt19937 mRandomizer;
 	std::uniform_int_distribution<int> mRandomDistributionTask;
 	std::uniform_int_distribution<int> mRandomDistributionPresent;
-	std::mutex mDoor;
+	std::mutex mSortDoor;
+	std::mutex mCardDoor;
 };
 
 #endif // !PARTY_H

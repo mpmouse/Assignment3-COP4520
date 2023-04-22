@@ -25,6 +25,10 @@ public:
 
 	void setId(int id);
 
+	int getId();
+
+	Card *getNext();
+
 	void makeHead();
 
 private:

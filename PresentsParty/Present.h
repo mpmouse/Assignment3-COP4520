@@ -40,22 +40,17 @@ public:
 
 	void setId(int id);
 
-	Present* getPrev();
-
-	void setPrev(Present *prev);
-
 	Present* getNext();
 
 	void setNext(Present *next);
 
-	int remove();
+	int remove(Present *prev);
 
 	void link(Present *prev, Present *next);
 	
 private:
 	int mId;
 	std::atomic<bool> mFlag;
-	Present *mPrev;
 	Present *mNext;
 	bool mHead;
 };

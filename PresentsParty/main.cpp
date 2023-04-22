@@ -14,7 +14,7 @@
 
 int main(int argc, char **argv, char **env) {
 
-	int presents = 500000;
+	int presents = 400;
 
 	int servents = 4;
 

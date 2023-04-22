@@ -32,7 +32,7 @@ public:
 
 	void printStatistics();
 
-	bool checkForPresent(int presentId);
+	bool checkForPresent(Present *peek, int presentId);
 
 	void writeCard();
 
@@ -42,13 +42,15 @@ private:
 	int mPresentCount;
 	int mServants;
 	int mCardCount;
+	int mSortedCount;
 	std::atomic<int> mTicket;
 	Present *mHead;
 	Card *mCardHead;
 	std::vector<Present> mUnsortedPresents;
 	std::atomic<bool> mAnnouncment;
 	std::mt19937 mRandomizer;
-	std::uniform_int_distribution<int> mRandomDistribution;
+	std::uniform_int_distribution<int> mRandomDistributionTask;
+	std::uniform_int_distribution<int> mRandomDistributionPresent;
 };
 
 #endif // !PARTY_H

@@ -31,3 +31,13 @@ void Card::setId(int id)
 {
 	this->mId = id;
 }
+
+int Card::getId()
+{
+	return mId;
+}
+
+Card* Card::getNext()
+{
+	return mNext;
+}

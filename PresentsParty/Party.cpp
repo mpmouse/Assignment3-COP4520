@@ -15,17 +15,18 @@
 
 
 Party::Party(int presents) :
-	mRandomDistribution(0, presents),
+	mRandomDistributionTask(1, 3),
+	mRandomDistributionPresent(0, presents - 1),
 	mPresentCount(presents),
 	mServants(4),
 	mCardCount(0),
+	mSortedCount(0),
 	mTicket(0)
 {
 	std::atomic<bool> mAnnouncment;
 	std::random_device seeder;
 	mRandomizer.seed(seeder());
 	mPresentCount = presents;
-	srand(time(NULL));
 	gatherPresents();
 	mHead = NULL;
 	mCardHead = NULL;
@@ -64,7 +65,7 @@ void Party::work()
 
 void Party::getTask()
 {
-	int randomTask = 1 + (rand() % 3);
+	int randomTask = mRandomDistributionTask(mRandomizer);
 
 	if (randomTask == 1)
 	{
@@ -77,8 +78,8 @@ void Party::getTask()
 	else if (randomTask == 3)
 	{
 		// Minotaur gives you a present id to search for
-		int id = (1 + rand() % mPresentCount);
-		checkForPresent(id);
+		int id = mRandomDistributionPresent(mRandomizer);
+		//checkForPresent(mHead, id);
 	}
 	else
 	{
@@ -102,39 +103,59 @@ void Party::gatherPresents()
 
 void Party::printStatistics()
 {
-	std::cout << "Present Count: " << mPresentCount << std::endl;
+	std::cout << "Total presents: " << mPresentCount << std::endl;
+	std::cout << "Sorted presents: " << mSortedCount << std::endl;
 	std::cout << "Thank you cards written: " << mCardCount << std::endl;
 
-	for (Present present : mUnsortedPresents)
+	Card *temp = mCardHead;
+	
+	/*
+	if (temp != NULL)
 	{
-		std::cout << present.getId() << std::endl;
-	}
+		int id = temp->getId();
+		
+		std::cout << "Thank you card for present "<< id << std::endl;
+
+		while (temp->getNext() != NULL)
+		{
+			temp = temp->getNext();
+			id = temp->getId();
+			std::cout << "Thank you card for present " << id << std::endl;
+		}
+
+	} */
 }
 
 
-bool Party::checkForPresent(int presentId)
+bool Party::checkForPresent(Present *peek, int presentId)
 {
-	bool result = false;
 	
-	Present *peek = this->mHead;
+	//Present *peek = this->mHead;
 
-	while ((peek != NULL) && (peek->getId() != presentId) && (peek->getId() < presentId))
+	while (peek != NULL && peek->checkFlag() == true)
 	{
-		peek = peek->getNext();
+		// wait for present to be available
 	}
 
-	if (peek != NULL && peek->getId() == presentId)
+	peek->raiseFlag();
+
+	if (peek->getId() == presentId)
 	{
-		std::cout << "Present requested was found in the stack." << std::endl;
-		result = true;
+		//std::cout << "Present requested was found in the stack." << std::endl;
+		peek->lowerFlag();
+		return true;
+	}
+	else if(peek->getId() < presentId)
+	{
+		peek->lowerFlag();
+		checkForPresent(peek->getNext(), presentId);
 	}
 	else
 	{
-		std::cout << "Present requested was not found in the stack." << std::endl;
-		result = false;
+		//std::cout << "Present requested was not found in the stack." << std::endl;
+		return false;
 	}
 
-	return result;
 }
 
 void Party::writeCard()
@@ -160,7 +181,7 @@ void Party::writeCard()
 
 		if (curr != NULL)
 		{
-			tyCard.setId(curr->remove());
+			tyCard.setId(curr->remove(temp));
 			delete curr;
 		}
 		else
@@ -173,20 +194,22 @@ void Party::writeCard()
 		tyCard.insert(mCardHead);
 		mCardHead = &tyCard;
 
-		std::cout << "Card written." << std::endl;
+		//std::cout << "Card written." << std::endl;
 
 		mCardCount++;
+
+		//printStatistics();
 
 		temp->setFlag(false);
 	}
 	else if (this->mUnsortedPresents.empty())
 	{
-		std::cout << "All presents have been sorted and all cards written." << std::endl;
+		//std::cout << "All presents have been sorted and all cards written." << std::endl;
 		this->mAnnouncment = true;
 	}
 	else
 	{
-		std::cout << "More presents need to be sorted before cards can be written." << std::endl;
+		//std::cout << "More presents need to be sorted before cards can be written." << std::endl;
 	}
 }
 
@@ -204,9 +227,11 @@ void Party::sortPresent()
 		else
 		{
 			Present *temp = this->mHead;
+			Present *prev = NULL;
 
 			while (temp->getId() <= present->getId() && temp->getNext() != NULL)
 			{
+				prev = temp;
 				temp = temp->getNext();
 			}
 
@@ -217,14 +242,16 @@ void Party::sortPresent()
 				// Oops, this gift has already been sorted
 				// Do nothing
 			}
-			if (temp->getNext() == NULL)
+			else if (temp->getNext() == NULL)
 			{
 				present->link(temp, NULL);
 			}
 			else
 			{
-				present->link(temp->getPrev(), temp);
+				present->link(prev, temp);
 			}
+
+			mSortedCount++;
 
 			temp->lowerFlag();
 		}
